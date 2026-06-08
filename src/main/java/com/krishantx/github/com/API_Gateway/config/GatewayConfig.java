@@ -10,14 +10,17 @@ import com.krishantx.github.com.API_Gateway.filter.ValidationFilter;
 @Configuration
 public class GatewayConfig implements WebMvcConfigurer {
     private final ValidationFilter validationFilter;
+    private final AuthenticationFilter authenticationFilter;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(validationFilter).order(1);
-        registry.addInterceptor(new AuthenticationFilter()).order(2);
+        registry.addInterceptor(authenticationFilter).order(2);
     }
 
-    public GatewayConfig(ValidationFilter validationFilter) {
+    public GatewayConfig(ValidationFilter validationFilter, AuthenticationFilter authenticationFilter) {
         this.validationFilter = validationFilter;
+        this.authenticationFilter = authenticationFilter;
     }
+
 }
