@@ -1,0 +1,15 @@
+routes:
+  /home:
+    targetUrl: http://localhost:8081/
+    allowedMethods: 
+    - GET
+    - POST
+    - DELETE
+    requiredHeaders: 
+    - X-API-KEY
+    authRequired: true
+  /dashboard:
+    targetUrl: http://localhost:8082/
+    allowedMethods: 
+    - GET
+    authRequired: false
