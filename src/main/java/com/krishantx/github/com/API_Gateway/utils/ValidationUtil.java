@@ -1,17 +1,14 @@
-package com.krishantx.github.com.API_Gateway.service;
+package com.krishantx.github.com.API_Gateway.utils;
 
 import java.util.Enumeration;
 import java.util.List;
-
-import org.springframework.stereotype.Service;
 
 import com.krishantx.github.com.API_Gateway.entity.Route;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@Service
-public class ValidationService {
+public class ValidationUtil {
     
     public boolean endpointExists(Route route, HttpServletRequest request, HttpServletResponse response) {
        if (route == null) {
