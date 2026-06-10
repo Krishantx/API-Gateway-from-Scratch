@@ -8,7 +8,7 @@ import com.krishantx.github.com.API_Gateway.utils.JwtUtil;
 
 @Service
 public class JwtService {
-    private JwtUtil jwtUtil = new JwtUtil();
+    private final JwtUtil jwtUtil = new JwtUtil();
 
     public String generateToken(String username) {
         return jwtUtil.generateToken(username);

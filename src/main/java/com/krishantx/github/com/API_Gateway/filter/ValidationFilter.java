@@ -40,8 +40,8 @@ public class ValidationFilter implements HandlerInterceptor {
         //Check if the request contains the required headers
         if (!validationUtil.hasRequiredHeaders(route, request, response))
             return false;
+        
         // If all checks pass -> move to the next filter chain
-
         return true;
         }
 }
