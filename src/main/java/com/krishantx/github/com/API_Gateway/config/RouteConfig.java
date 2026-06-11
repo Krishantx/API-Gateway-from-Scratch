@@ -9,23 +9,26 @@ import org.springframework.context.annotation.Configuration;
 import com.krishantx.github.com.API_Gateway.entity.Route;
 
 @Configuration
-@ConfigurationProperties(prefix="")
+@ConfigurationProperties(prefix = "")
 public class RouteConfig {
-        private Map<String, Route> routes = new HashMap<>();
-        
-        public Map<String, Route> getRoutes() { 
-            return routes; 
-        }
-        
-        public void setRoutes(Map<String, Route> routes) {
-            this.routes = routes;
-        }
+  private Map<String, Route> routes = new HashMap<>();
 
-        public Route findRoute(String incomingPath) {
-            return routes.entrySet().stream()
-            .filter(entry -> incomingPath.startsWith(entry.getKey()))
-            .map(Map.Entry::getValue)
-            .findFirst()
-            .orElse(null);
-        }
+  public RouteConfig() {
+  }
+
+  public Map<String, Route> getRoutes() {
+    return routes;
+  }
+
+  public void setRoutes(Map<String, Route> routes) {
+    this.routes = routes;
+  }
+
+  public Route findRoute(String incomingPath) {
+    return routes.entrySet().stream()
+        .filter(entry -> incomingPath.startsWith(entry.getKey()))
+        .map(Map.Entry::getValue)
+        .findFirst()
+        .orElse(null);
+  }
 }
