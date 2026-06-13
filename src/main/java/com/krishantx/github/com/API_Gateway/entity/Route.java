@@ -3,58 +3,53 @@ package com.krishantx.github.com.API_Gateway.entity;
 import java.util.List;
 
 public class Route {
-    private String targetUrl;
-    private List<String> allowedMethods;
-    private List<String> requiredHeaders;
-    private boolean authRequired;
+  private String serviceName;
+  private List<String> allowedMethods;
+  private List<String> requiredHeaders;
+  private boolean authRequired;
 
+  public List<String> getAllowedMethods() {
+    return allowedMethods;
+  }
 
-    public String getTargetUrl() {
-        return targetUrl;
-    }
+  public void setAllowedMethods(List<String> allowedMethods) {
+    this.allowedMethods = allowedMethods;
+  }
 
-    public void setTargetUrl(String targetUrl) {
-        this.targetUrl = targetUrl;
-    }
+  public List<String> getRequiredHeaders() {
+    return requiredHeaders;
+  }
 
+  public void setRequiredHeaders(List<String> requiredHeaders) {
+    this.requiredHeaders = requiredHeaders;
+  }
 
-    public List<String> getAllowedMethods() {
-        return allowedMethods;
-    }
+  public boolean isAuthRequired() {
+    return authRequired;
+  }
 
-    public void setAllowedMethods(List<String> allowedMethods) {
-        this.allowedMethods = allowedMethods;
-    }
+  public void setAuthRequired(boolean authRequired) {
+    this.authRequired = authRequired;
+  }
 
-    public List<String> getRequiredHeaders() {
-        return requiredHeaders;
-    }
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("Route{");
+    sb.append("targetUrl=").append(targetUrl);
+    sb.append(", allowedMethods=").append(allowedMethods);
+    sb.append(", requiredHeaders=").append(requiredHeaders);
+    sb.append(", authRequired=").append(authRequired);
+    sb.append('}');
+    return sb.toString();
+  }
 
-    public void setRequiredHeaders(List<String> requiredHeaders) {
-        this.requiredHeaders = requiredHeaders;
-    }
+  public String getServiceName() {
+    return serviceName;
+  }
 
-    public boolean isAuthRequired() {
-        return authRequired;
-    }
-
-    public void setAuthRequired(boolean authRequired) {
-        this.authRequired = authRequired;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Route{");
-        sb.append("targetUrl=").append(targetUrl);
-        sb.append(", allowedMethods=").append(allowedMethods);
-        sb.append(", requiredHeaders=").append(requiredHeaders);
-        sb.append(", authRequired=").append(authRequired);
-        sb.append('}');
-        return sb.toString();
-    }
-
-
-
+  public void setServiceName(String serviceName) {
+    this.serviceName = serviceName;
+  }
 
 }

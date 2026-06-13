@@ -1,6 +1,6 @@
 routes:
-  /home:
-    targetUrl: http://localhost:8081/
+  /profile:
+    serviceName: SAMPLE-MICROSERVICE-1
     allowedMethods: 
     - GET
     - POST
@@ -8,8 +8,13 @@ routes:
     requiredHeaders: 
     - X-API-KEY
     authRequired: true
-  /dashboard:
-    targetUrl: http://localhost:8082/
+  /product:
+    serviceName: SAMPLE-MICROSERVICE-2
+    allowedMethods: 
+    - GET
+    authRequired: false
+  /order:
+    serviceName: SAMPLE-MICROSERVICE-2
     allowedMethods: 
     - GET
     authRequired: false
