@@ -3,32 +3,32 @@ package com.krishantx.github.com.API_Gateway.service;
 import java.util.List;
 import java.util.Random;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
-import com.krishantx.github.com.API_Gateway.config.RouteConfig;
-import com.krishantx.github.com.API_Gateway.entity.Route;
-import com.netflix.appinfo.InstanceInfo;
-import com.netflix.discovery.DiscoveryClient;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class DynamicRouting {
-  @Autowired
-  private DiscoveryClient discoveryClient;
-  @Autowired
-  private RouteConfig routeConfig;
+  private final RestClient restClient;
 
-  private String getServiceName(String uri) {
-    Route route = routeConfig.findRoute(uri);
-    return route.getServiceName();
+  public DynamicRouting(RestClient.Builder builder) {
+    this.restClient = builder.build();
   }
 
-  public InstanceInfo getInstance(String uri) {
-    String serviceName = getServiceName(uri);
-    List<InstanceInfo> instances = discoveryClient.getInstancesById(serviceName);
-    int randomInt = Random.nextInt(instances.size());
-    InstanceInfo instance = instances.get(randomInt);
-    return instance;
-  }
+  public ResponseEntity<?> requestInstances(List<ServiceInstance> instances, HttpServletRequest request) {
+    ServiceInstance randomInstance = instances.get(new Random().nextInt(instances.size()));
+    System.out.println(randomInstance.getUri());
+    String requestURL = randomInstance.getUri() + "/" + request.getRequestURI();
 
+    Object body = this.restClient.get()
+        .uri(requestURL)
+        .retrieve()
+        .body(Object.class);
+    System.out.println(body);
+    return ResponseEntity.status(200).body(body);
+
+  }
 }

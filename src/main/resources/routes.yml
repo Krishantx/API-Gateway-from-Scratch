@@ -7,14 +7,14 @@ routes:
     - DELETE
     requiredHeaders: 
     - X-API-KEY
-    authRequired: true
+    authRequired: false
   /product:
     serviceName: SAMPLE-MICROSERVICE-2
     allowedMethods: 
     - GET
     authRequired: false
   /order:
-    serviceName: SAMPLE-MICROSERVICE-2
+    serviceName: SAMPLE-MICROSERVICE-3
     allowedMethods: 
     - GET
     authRequired: false

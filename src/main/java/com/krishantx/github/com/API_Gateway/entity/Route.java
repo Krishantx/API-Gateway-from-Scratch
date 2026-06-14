@@ -36,7 +36,7 @@ public class Route {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("Route{");
-    sb.append("targetUrl=").append(targetUrl);
+    sb.append("targetUrl=").append(serviceName);
     sb.append(", allowedMethods=").append(allowedMethods);
     sb.append(", requiredHeaders=").append(requiredHeaders);
     sb.append(", authRequired=").append(authRequired);
