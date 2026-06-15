@@ -8,13 +8,21 @@ routes:
     requiredHeaders: 
     - X-API-KEY
     authRequired: false
+  
   /product:
     serviceName: SAMPLE-MICROSERVICE-2
     allowedMethods: 
     - GET
     authRequired: false
+  
   /order:
     serviceName: SAMPLE-MICROSERVICE-3
     allowedMethods: 
     - GET
+    authRequired: false
+  
+  /authenticate:
+    serviceName: SAMPLE-MICROSERVICE-1
+    allowedMethods:
+    - POST
     authRequired: false

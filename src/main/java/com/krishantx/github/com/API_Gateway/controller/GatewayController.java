@@ -17,19 +17,22 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class GatewayController {
+
   @Autowired
   private JwtService jwtService;
+
   @Autowired
   private DynamicRouting dynamicRouting;
+
   @Autowired
   private ServiceDiscovery serviceDiscovery;
 
   @RequestMapping("/**")
   public ResponseEntity<?> gatewayController(HttpServletRequest request) {
     String requestUri = request.getRequestURI();
+    System.out.println("Request reaches the controller");
     List<ServiceInstance> instances = serviceDiscovery.getServiceInstances(requestUri);
     ResponseEntity<?> response = dynamicRouting.requestInstances(instances, request);
-
     return response;
   }
 }

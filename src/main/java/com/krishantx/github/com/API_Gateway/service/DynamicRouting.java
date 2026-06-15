@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -23,12 +25,25 @@ public class DynamicRouting {
     System.out.println(randomInstance.getUri());
     String requestURL = randomInstance.getUri() + "/" + request.getRequestURI();
 
-    Object body = this.restClient.get()
-        .uri(requestURL)
-        .retrieve()
-        .body(Object.class);
-    System.out.println(body);
-    return ResponseEntity.status(200).body(body);
+    byte[] requestBody = null;
+    Object responseBody = null;
+    try {
+      requestBody = request.getInputStream().readAllBytes();
+    } catch (Exception e) {
+      System.out.println(e);
+    }
+    try {
+      responseBody = this.restClient
+          .method(HttpMethod.valueOf(request.getMethod()))
+          .uri(requestURL)
+          .contentType(MediaType.parseMediaType(request.getContentType()))
+          .body(requestBody)
+          .retrieve()
+          .body(Object.class);
+    } catch (Exception e) {
+      System.out.println("Exception: " + e);
+    }
+    return ResponseEntity.status(200).body(responseBody);
 
   }
 }
