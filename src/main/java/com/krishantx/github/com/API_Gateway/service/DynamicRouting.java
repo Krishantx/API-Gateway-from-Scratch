@@ -33,6 +33,7 @@ public class DynamicRouting {
       System.out.println(e);
     }
     try {
+      System.out.println("contentType: " + request.getContentType());
       responseBody = this.restClient
           .method(HttpMethod.valueOf(request.getMethod()))
           .uri(requestURL)

@@ -31,15 +31,24 @@ public class ValidationFilter implements HandlerInterceptor {
     String incomingRequest = request.getRequestURI().substring(1);
     Route route = routeConfig.findRoute(incomingRequest);
     // Check if the endpoint exists, If not return 404
-    if (!validationUtil.endpointExists(route, request, response))
+    System.out.println("[ " + incomingRequest + " ]");
+    System.out.println("Route:" + route);
+
+    if (!validationUtil.endpointExists(route, request, response)) {
+      System.out.println("Endpoint does not exist");
       return false;
+    }
     // Check if the endpoint supports that method
-    if (!validationUtil.isMethodSupported(route, request, response))
+    if (!validationUtil.isMethodSupported(route, request, response)) {
+      System.out.println("HTTP Method not supported");
       return false;
+    }
 
     // Check if the request contains the required headers
-    if (!validationUtil.hasRequiredHeaders(route, request, response))
+    if (!validationUtil.hasRequiredHeaders(route, request, response)) {
+      System.out.println("Request does not contain the required headers");
       return false;
+    }
     System.out.println("Valideation Checks passed");
     // If all checks pass -> move to the next filter chain
     return true;

@@ -7,13 +7,14 @@ import org.springframework.web.client.RestClient;
 
 @Configuration
 public class RateLimitApiConfig {
-    @Value("${rlaas.apikey}")
-    private String RLAAS_API_KEY;
-    @Bean
-    public RestClient rateLimitClient() {
-        return RestClient.builder()
-                        .baseUrl("http://localhost:8081")
-                        .defaultHeader("x-api-key", RLAAS_API_KEY)
-                        .build();
-    }
+  @Value("${rlaas.apikey}")
+  private String RLAAS_API_KEY;
+
+  @Bean
+  public RestClient rateLimitClient() {
+    return RestClient.builder()
+        .baseUrl("http://rlaas:8085")
+        .defaultHeader("x-api-key", RLAAS_API_KEY)
+        .build();
+  }
 }

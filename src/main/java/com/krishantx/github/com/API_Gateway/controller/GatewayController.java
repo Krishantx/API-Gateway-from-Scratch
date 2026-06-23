@@ -32,6 +32,7 @@ public class GatewayController {
     String requestUri = request.getRequestURI();
     System.out.println("Request reaches the controller");
     List<ServiceInstance> instances = serviceDiscovery.getServiceInstances(requestUri);
+    System.out.println(instances);
     ResponseEntity<?> response = dynamicRouting.requestInstances(instances, request);
     return response;
   }

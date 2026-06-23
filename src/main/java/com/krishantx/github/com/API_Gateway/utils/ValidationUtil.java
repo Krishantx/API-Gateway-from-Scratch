@@ -1,7 +1,6 @@
 package com.krishantx.github.com.API_Gateway.utils;
 
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 
 import com.krishantx.github.com.API_Gateway.entity.Route;

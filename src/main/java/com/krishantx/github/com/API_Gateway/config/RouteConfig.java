@@ -8,9 +8,16 @@ import org.springframework.context.annotation.Configuration;
 
 import com.krishantx.github.com.API_Gateway.entity.Route;
 
+import jakarta.annotation.PostConstruct;
+
 @Configuration
 @ConfigurationProperties(prefix = "")
 public class RouteConfig {
+  @PostConstruct
+  public void init() {
+    System.out.println("Loaded routes: " + routes);
+  }
+
   private Map<String, Route> routes = new HashMap<>();
 
   public RouteConfig() {

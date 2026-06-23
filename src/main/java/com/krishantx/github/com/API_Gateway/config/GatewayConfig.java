@@ -18,7 +18,7 @@ public class GatewayConfig implements WebMvcConfigurer {
   public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(validationFilter).order(1);
     registry.addInterceptor(authenticationFilter).order(2);
-    // registry.addInterceptor(rateLimitFilter).order(3);
+    registry.addInterceptor(rateLimitFilter).order(3);
   }
 
   public GatewayConfig(RateLimitFilter rateLimitFilter, ValidationFilter validationFilter,
