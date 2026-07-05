@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class DynamicRouting {
   private final RestClient restClient;
@@ -21,30 +23,47 @@ public class DynamicRouting {
   }
 
   public ResponseEntity<?> requestInstances(List<ServiceInstance> instances, HttpServletRequest request) {
+    if (instances.size() == 0) {
+      return ResponseEntity.status(503).build();
+    }
     ServiceInstance randomInstance = instances.get(new Random().nextInt(instances.size()));
-    System.out.println(randomInstance.getUri());
     String requestURL = randomInstance.getUri() + "/" + request.getRequestURI();
 
     byte[] requestBody = null;
-    Object responseBody = null;
+
     try {
       requestBody = request.getInputStream().readAllBytes();
     } catch (Exception e) {
       System.out.println(e);
     }
+
     try {
-      System.out.println("contentType: " + request.getContentType());
-      responseBody = this.restClient
+      RestClient.RequestBodySpec spec = this.restClient
           .method(HttpMethod.valueOf(request.getMethod()))
-          .uri(requestURL)
-          .contentType(MediaType.parseMediaType(request.getContentType()))
-          .body(requestBody)
-          .retrieve()
-          .body(Object.class);
+          .uri(requestURL);
+
+      String contentType = request.getContentType();
+
+      if (contentType != null) {
+        spec.contentType(MediaType.parseMediaType(contentType));
+      }
+
+      String corelationId = request.getAttribute("correlationId").toString();
+
+      if (corelationId != null && (corelationId.length() > 0)) {
+        spec.header("X-CORELATION-ID", corelationId);
+      }
+
+      if (requestBody != null && requestBody.length > 0) {
+        spec.body(requestBody);
+      }
+
+      Object res = spec.retrieve().body(Object.class);
+      return ResponseEntity.ok(res);
     } catch (Exception e) {
-      System.out.println("Exception: " + e);
+      log.error("Exception encountered: {}", e);
+      return ResponseEntity.internalServerError().build();
     }
-    return ResponseEntity.status(200).body(responseBody);
 
   }
 }

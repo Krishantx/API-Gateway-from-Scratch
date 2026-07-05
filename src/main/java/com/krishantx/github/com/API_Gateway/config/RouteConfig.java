@@ -13,6 +13,7 @@ import jakarta.annotation.PostConstruct;
 @Configuration
 @ConfigurationProperties(prefix = "")
 public class RouteConfig {
+
   @PostConstruct
   public void init() {
     System.out.println("Loaded routes: " + routes);
@@ -33,7 +34,8 @@ public class RouteConfig {
 
   public Route findRoute(String incomingPath) {
     return routes.entrySet().stream()
-        .filter(entry -> incomingPath.startsWith(entry.getKey()))
+        .filter(entry -> incomingPath.startsWith(entry.getKey() + "/") ||
+            incomingPath.equals(entry.getKey()))
         .map(Map.Entry::getValue)
         .findFirst()
         .orElse(null);

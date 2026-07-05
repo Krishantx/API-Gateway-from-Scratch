@@ -4,22 +4,17 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.netflix.eureka.EurekaServiceInstance;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.krishantx.github.com.API_Gateway.service.DynamicRouting;
-import com.krishantx.github.com.API_Gateway.service.JwtService;
 import com.krishantx.github.com.API_Gateway.service.ServiceDiscovery;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@Controller
+@RestController
 public class GatewayController {
-
-  @Autowired
-  private JwtService jwtService;
 
   @Autowired
   private DynamicRouting dynamicRouting;
@@ -30,9 +25,7 @@ public class GatewayController {
   @RequestMapping("/**")
   public ResponseEntity<?> gatewayController(HttpServletRequest request) {
     String requestUri = request.getRequestURI();
-    System.out.println("Request reaches the controller");
     List<ServiceInstance> instances = serviceDiscovery.getServiceInstances(requestUri);
-    System.out.println(instances);
     ResponseEntity<?> response = dynamicRouting.requestInstances(instances, request);
     return response;
   }

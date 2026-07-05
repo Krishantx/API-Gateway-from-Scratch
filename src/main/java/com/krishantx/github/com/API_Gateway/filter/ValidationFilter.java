@@ -1,56 +1,62 @@
 package com.krishantx.github.com.API_Gateway.filter;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.krishantx.github.com.API_Gateway.config.RouteConfig;
 import com.krishantx.github.com.API_Gateway.entity.Route;
 import com.krishantx.github.com.API_Gateway.utils.ValidationUtil;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
-public class ValidationFilter implements HandlerInterceptor {
+public class ValidationFilter extends OncePerRequestFilter {
   @Autowired
   private RouteConfig routeConfig;
 
   private final ValidationUtil validationUtil = new ValidationUtil();
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-    // Checks if the HTTP Request is valid or not. Returns False if it is not
-    /*
-     * Everything it needs to check:
-     * [x] Check if the endpoint exists
-     * [x] Check if the HTTP Method for that endpoint exists
-     * [x] Check if the request contains the required headers
-     */
-    System.out.println("Validation Checks Underway");
+  @Order(2)
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+      throws IOException, ServletException {
+
+    log.info("Validation Filter Started");
     String incomingRequest = request.getRequestURI().substring(1);
     Route route = routeConfig.findRoute(incomingRequest);
     // Check if the endpoint exists, If not return 404
-    System.out.println("[ " + incomingRequest + " ]");
-    System.out.println("Route:" + route);
 
     if (!validationUtil.endpointExists(route, request, response)) {
-      System.out.println("Endpoint does not exist");
-      return false;
+      log.info("The Endpoint \"{}\" does not exist", incomingRequest);
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+      return;
     }
     // Check if the endpoint supports that method
     if (!validationUtil.isMethodSupported(route, request, response)) {
-      System.out.println("HTTP Method not supported");
-      return false;
+      log.info("HTTP Method \"{}\" not supported for endpoint {}",
+          request.getMethod(),
+          incomingRequest);
+      response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+      return;
     }
 
     // Check if the request contains the required headers
     if (!validationUtil.hasRequiredHeaders(route, request, response)) {
-      System.out.println("Request does not contain the required headers");
-      return false;
+      log.info("Request does not contain the required headers");
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing required headers");
+      return;
     }
-    System.out.println("Valideation Checks passed");
+    log.info("Validation Checks passed");
     // If all checks pass -> move to the next filter chain
-    return true;
+    filterChain.doFilter(request, response);
   }
 }
