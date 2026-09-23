@@ -36,17 +36,18 @@ public class FilterConfig {
     return registration;
   }
 
-  @Bean
-  public FilterRegistrationBean<RateLimitFilter> rateLimitFilterRegisteration(
-      RateLimitFilter filter) {
-    FilterRegistrationBean<RateLimitFilter> registration = new FilterRegistrationBean<>();
+  // @Bean
+  // public FilterRegistrationBean<RateLimitFilter> rateLimitFilterRegisteration(
+  // RateLimitFilter filter) {
+  // FilterRegistrationBean<RateLimitFilter> registration = new
+  // FilterRegistrationBean<>();
 
-    registration.setFilter(filter);
-    registration.addUrlPatterns("/*");
-    registration.setOrder(4);
+  // registration.setFilter(filter);
+  // registration.addUrlPatterns("/*");
+  // registration.setOrder(4);
 
-    return registration;
-  }
+  // return registration;
+  // }
 
   @Bean
   public FilterRegistrationBean<CorelationIdFilter> corelationIdFilterRegistration(

@@ -31,7 +31,6 @@ public class CorelationIdFilter extends OncePerRequestFilter {
 
     response.setHeader(HEADER, corelationId);
     request.setAttribute("correlationId", corelationId);
-
     try {
       doFilter(request, response, filterChain);
     } finally {

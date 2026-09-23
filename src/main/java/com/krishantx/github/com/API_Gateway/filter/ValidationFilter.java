@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
+@Order(2)
 @Slf4j
 @Component
 public class ValidationFilter extends OncePerRequestFilter {
@@ -26,7 +27,7 @@ public class ValidationFilter extends OncePerRequestFilter {
   private final ValidationUtil validationUtil = new ValidationUtil();
 
   @Override
-  @Order(2)
+
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws IOException, ServletException {
 
@@ -57,6 +58,7 @@ public class ValidationFilter extends OncePerRequestFilter {
     }
     log.info("Validation Checks passed");
     // If all checks pass -> move to the next filter chain
+    System.out.println("Request reached the Validation Filter");
     filterChain.doFilter(request, response);
   }
 }
