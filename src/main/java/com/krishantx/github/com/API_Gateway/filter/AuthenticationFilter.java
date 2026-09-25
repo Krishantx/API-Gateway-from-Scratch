@@ -12,6 +12,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.krishantx.github.com.API_Gateway.config.RouteConfig;
 import com.krishantx.github.com.API_Gateway.entity.Route;
 import com.krishantx.github.com.API_Gateway.service.JwtService;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,16 +42,26 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     if (!route.isAuthRequired()) {
       securityLogger.info("No Authentication Required");
-      System.out.println("No Authentication Required");
       doFilter(request, response, filterChain);
 
       return;
     }
-    String token = request.getHeader("Authorization").substring(7);
-    String username = jwtService.validateToken(token);
+    String token = request.getHeader("Authorization");
+    if (token == null) {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      return;
+    }
+    token = token.substring(7);
+    String username = new String();
+    try {
+      username = jwtService.validateToken(token);
+    } catch (JwtException exception) {
+      securityLogger.info("Expired JWT Provided : " + exception);
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      return;
+    }
     if (username == null) {
       securityLogger.info("Unable to validate the user returning 401");
-      System.out.println("Unable to validate the user returning 401");
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
