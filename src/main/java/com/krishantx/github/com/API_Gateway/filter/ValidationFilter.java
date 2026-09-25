@@ -33,6 +33,11 @@ public class ValidationFilter extends OncePerRequestFilter {
 
     log.info("Validation Filter Started");
     String incomingRequest = request.getRequestURI().substring(1);
+    System.out.println("Imcoming Request: " + incomingRequest);
+    if (incomingRequest.endsWith("/")) {
+      incomingRequest = incomingRequest.substring(0, incomingRequest.length() - 1);
+      System.out.println("incomingRequest : " + incomingRequest);
+    }
     Route route = routeConfig.findRoute(incomingRequest);
     // Check if the endpoint exists, If not return 404
 

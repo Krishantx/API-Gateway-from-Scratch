@@ -23,9 +23,7 @@ public class ServiceDiscovery {
   }
 
   public List<ServiceInstance> getServiceInstances(String uri) {
-    System.out.println("Init Service Discovery");
     String serviceName = getServiceName(uri);
-    System.out.println("Service Name: " + serviceName);
     List<ServiceInstance> instances = discoveryClient.getInstances(serviceName);
     return instances;
   }

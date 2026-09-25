@@ -26,6 +26,9 @@ public class GatewayController {
   public ResponseEntity<?> gatewayController(HttpServletRequest request) {
     System.out.println("Requet reached the Controller");
     String requestUri = request.getRequestURI();
+    if (requestUri.endsWith("/")) {
+      requestUri = requestUri.substring(0, requestUri.length() - 1);
+    }
     List<ServiceInstance> instances = serviceDiscovery.getServiceInstances(requestUri);
     ResponseEntity<?> response = dynamicRouting.requestInstances(instances, request);
     return response;

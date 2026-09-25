@@ -39,18 +39,22 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
     if (!route.isAuthRequired()) {
       securityLogger.info("No Authentication Required");
-      filterChain.doFilter(request, response);
+      System.out.println("No Authentication Required");
+      doFilter(request, response, filterChain);
+
       return;
     }
     String token = request.getHeader("Authorization").substring(7);
     String username = jwtService.validateToken(token);
     if (username == null) {
       securityLogger.info("Unable to validate the user returning 401");
+      System.out.println("Unable to validate the user returning 401");
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
     request.setAttribute("username", username);
     log.info("\"{}\" is validated");
+    System.out.println("Validated");
     filterChain.doFilter(request, response);
   }
 }

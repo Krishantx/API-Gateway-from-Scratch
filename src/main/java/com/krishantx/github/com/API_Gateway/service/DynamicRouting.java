@@ -27,7 +27,11 @@ public class DynamicRouting {
       return ResponseEntity.status(503).build();
     }
     ServiceInstance randomInstance = instances.get(new Random().nextInt(instances.size()));
-    String requestURL = randomInstance.getUri() + "/" + request.getRequestURI();
+    String incomingRequest = request.getRequestURI();
+    if (incomingRequest.endsWith("/")) {
+      incomingRequest = incomingRequest.substring(0, incomingRequest.length() - 1);
+    }
+    String requestURL = randomInstance.getUri() + "/" + incomingRequest;
 
     byte[] requestBody = null;
 
