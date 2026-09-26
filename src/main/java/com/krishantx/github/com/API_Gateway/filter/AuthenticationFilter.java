@@ -51,6 +51,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
       return;
     }
+    if (token.length() < 8) {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      return;
+    }
     token = token.substring(7);
     String username = new String();
     try {
