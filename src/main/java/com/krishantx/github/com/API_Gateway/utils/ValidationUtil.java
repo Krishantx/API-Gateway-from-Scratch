@@ -31,13 +31,11 @@ public class ValidationUtil {
     List<String> requiredHeaders = route.getRequiredHeaders();
     if (requiredHeaders == null)
       return true;
-    System.out.println(requiredHeaders);
     int matchedHeadersCount = 0;
     int requiredHeadersCount = requiredHeaders.size();
     Enumeration<String> incomingHeaders = request.getHeaderNames();
     while (incomingHeaders.hasMoreElements()) {
       String currHeader = incomingHeaders.nextElement();
-      System.out.println(currHeader);
       if (requiredHeaders.contains(currHeader)) {
         matchedHeadersCount++;
       }

@@ -37,7 +37,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
   public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws IOException, ServletException {
     // Convert JWT token to User Using an Identity Provider Service.
-    System.out.println("Request Reached the auth filter");
     Route route = routeConfig.findRoute(request.getRequestURI().substring(1));
 
     if (!route.isAuthRequired()) {
@@ -71,7 +70,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     }
     request.setAttribute("username", username);
     log.info("\"{}\" is validated");
-    System.out.println("Validated");
     filterChain.doFilter(request, response);
   }
 }

@@ -17,7 +17,6 @@ public class ServiceDiscovery {
   private RouteConfig routeConfig;
 
   private String getServiceName(String uri) {
-    System.out.println(uri);
     Route route = routeConfig.findRoute(uri.substring(1));
     return route.getServiceName();
   }

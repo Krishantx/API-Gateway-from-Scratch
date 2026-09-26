@@ -52,11 +52,13 @@ public class DynamicRouting {
         spec.contentType(MediaType.parseMediaType(contentType));
       }
 
-      String corelationId = request.getAttribute("correlationId").toString();
+      Object corelationId = request.getAttribute("correlationId");
 
-      if (corelationId != null && (corelationId.length() > 0)) {
-        spec.header("X-CORELATION-ID", corelationId);
-      }
+      if (corelationId == null)
+        return ResponseEntity.internalServerError().build();
+
+      if (corelationId.toString().length() > 0)
+        spec.header("X-CORELATION-ID", corelationId.toString());
 
       if (requestBody != null && requestBody.length > 0) {
         spec.body(requestBody);
@@ -64,7 +66,9 @@ public class DynamicRouting {
 
       Object res = spec.retrieve().body(Object.class);
       return ResponseEntity.ok(res);
-    } catch (Exception e) {
+    } catch (
+
+    Exception e) {
       log.error("Exception encountered: {}", e);
       return ResponseEntity.internalServerError().build();
     }

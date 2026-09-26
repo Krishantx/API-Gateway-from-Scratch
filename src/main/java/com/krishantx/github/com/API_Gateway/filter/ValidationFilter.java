@@ -33,10 +33,8 @@ public class ValidationFilter extends OncePerRequestFilter {
 
     log.info("Validation Filter Started");
     String incomingRequest = request.getRequestURI().substring(1);
-    System.out.println("Imcoming Request: " + incomingRequest);
     if (incomingRequest.endsWith("/")) {
       incomingRequest = incomingRequest.substring(0, incomingRequest.length() - 1);
-      System.out.println("incomingRequest : " + incomingRequest);
     }
     Route route = routeConfig.findRoute(incomingRequest);
     // Check if the endpoint exists, If not return 404
@@ -63,7 +61,6 @@ public class ValidationFilter extends OncePerRequestFilter {
     }
     log.info("Validation Checks passed");
     // If all checks pass -> move to the next filter chain
-    System.out.println("Request reached the Validation Filter");
     filterChain.doFilter(request, response);
   }
 }

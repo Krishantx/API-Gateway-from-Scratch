@@ -7,7 +7,7 @@ routes:
     - DELETE
     requiredHeaders: 
     - x-api-key
-    authRequired: false
+    authRequired: true
   
   /product:
     serviceName: SAMPLE-MICROSERVICE-2

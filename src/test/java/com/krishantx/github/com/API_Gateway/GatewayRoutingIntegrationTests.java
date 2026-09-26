@@ -27,6 +27,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 
+import com.krishantx.github.com.API_Gateway.service.JwtService;
 import com.krishantx.github.com.API_Gateway.service.ServiceDiscovery;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -91,6 +92,7 @@ class GatewayRoutingIntegrationTests {
     HttpHeaders headers = new HttpHeaders();
     headers.set("x-api-key", "test-key");
     headers.set("X-Corelation-Id", "trace-injected");
+    headers.set("Authorization", "Bearer " + JwtService.generateToken("testuser"));
     ResponseEntity<String> response = restTemplate.exchange("/profile", HttpMethod.GET,
         new HttpEntity<>(headers), String.class);
     assertEquals(503, response.getStatusCode().value());

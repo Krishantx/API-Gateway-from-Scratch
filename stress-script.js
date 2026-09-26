@@ -1,67 +1,56 @@
 import http from 'k6/http';
+import { check } from 'k6';
 import { Counter, Trend } from 'k6/metrics';
 
 export const options = {
-    vus: 10,
-    duration: '30s',
+  vus: 100,
+  duration: '60s',
+  thresholds: {
+    http_req_duration: ['p(95)<500'],
+    checks: ['rate>0.99'],
+  },
+  summaryTrendStats: ['avg', 'min', 'med', 'p(90)', 'p(95)', 'p(99)'],
 };
 
-// Counters
-const success = new Counter('success_requests');
-const unauthorized = new Counter('unauthorized_requests');
-const forbidden = new Counter('forbidden_requests');
-const notFound = new Counter('not_found_requests');
-const rateLimited = new Counter('rate_limited_requests');
-const serverError = new Counter('server_error_requests');
+const TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrcmlzaGFudHgiLCJpYXQiOjE3OTA0MDMwOTIsImV4cCI6MTc5MDQwNDg5Mn0.Mmn08yqVJcz3hRr9N597Ip2QF3d3b2R5RMQJyrcdSgE';
+const API_KEY = 'GXDekhdd1Qtl5eMiJhxtdaplcS-GjSa5ADLgpbyEyc0';
+const BASE_URL = 'http://localhost:8080';
 
-// Response time trends
-const successTime = new Trend('success_response_time');
-const unauthorizedTime = new Trend('unauthorized_response_time');
-const forbiddenTime = new Trend('forbidden_response_time');
-const notFoundTime = new Trend('not_found_response_time');
-const rateLimitedTime = new Trend('rate_limited_response_time');
-const serverErrorTime = new Trend('server_error_response_time');
+const authenticatedReqs = new Counter('authenticated_requests');
+const authenticatedLatency = new Trend('authenticated_latency');
+const rejectedReqs = new Counter('rejected_requests');
+const rejectedLatency = new Trend('rejected_latency');
+const gatewayErrors = new Counter('gateway_errors');
 
 export default function () {
+  const authorized = Math.random() < 0.8;
 
-    const res = http.get('http://localhost:8080/product');
+  const res = http.get(`${BASE_URL}/profile`, {
+    headers: {
+      Authorization: `Bearer ${authorized ? TOKEN : 'invalid.token.here'}`,
+      'x-api-key': API_KEY,
+    },
+  });
 
-    switch (res.status) {
-
-        case 200:
-            success.add(1);
-            successTime.add(res.timings.duration);
-            break;
-
-        case 401:
-            unauthorized.add(1);
-            unauthorizedTime.add(res.timings.duration);
-            break;
-
-        case 403:
-            forbidden.add(1);
-            forbiddenTime.add(res.timings.duration);
-            break;
-
-        case 404:
-            notFound.add(1);
-            notFoundTime.add(res.timings.duration);
-            break;
-
-        case 429:
-            rateLimited.add(1);
-            rateLimitedTime.add(res.timings.duration);
-            break;
-
-        default:
-            if (res.status >= 500) {
-                serverError.add(1);
-                serverErrorTime.add(res.timings.duration);
-            }
-            break;
+  if (authorized) {
+    if (res.status === 200) {
+      authenticatedReqs.add(1);
+      authenticatedLatency.add(res.timings.duration);
+    } else {
+      gatewayErrors.add(1);
     }
-
-    console.log(
-        `Status=${res.status} | Time=${res.timings.duration.toFixed(2)} ms`
-    );
+    check(res, {
+      'authorized request returns 200': (r) => r.status === 200,
+    });
+  } else {
+    if (res.status === 401) {
+      rejectedReqs.add(1);
+      rejectedLatency.add(res.timings.duration);
+    } else {
+      gatewayErrors.add(1);
+    }
+    check(res, {
+      'unauthenticated request returns 401': (r) => r.status === 401,
+    });
+  }
 }

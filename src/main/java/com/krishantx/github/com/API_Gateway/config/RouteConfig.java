@@ -16,7 +16,6 @@ public class RouteConfig {
 
   @PostConstruct
   public void init() {
-    System.out.println("Loaded routes: " + routes);
   }
 
   private Map<String, Route> routes = new HashMap<>();
